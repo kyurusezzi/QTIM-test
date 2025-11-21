@@ -7,7 +7,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between, MoreThanOrEqual, LessThanOrEqual, Like } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { Article } from './entities/article.entity';
@@ -226,8 +226,7 @@ export class ArticlesService {
   }
 
   private async invalidateArticlesCache(): Promise<void> {
-    // In a real-world scenario, you might want to use a more sophisticated approach
-    // like tagging or wildcard deletion. For now, we'll let the cache expire naturally.
-    // Alternatively, you could maintain a list of cache keys or use Redis SCAN.
+    // Cache will expire naturally after TTL (5 minutes)
+    // For production, consider using Redis SCAN or cache tagging
   }
 }
