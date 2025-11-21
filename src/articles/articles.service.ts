@@ -38,9 +38,6 @@ export class ArticlesService {
     });
     const savedArticle = await this.articlesRepository.save(article);
 
-    // Invalidate cache for all articles list
-    await this.invalidateArticlesCache();
-
     // Fetch the article with author relation to return complete data
     const articleWithAuthor = await this.articlesRepository.findOne({
       where: { id: savedArticle.id },
@@ -193,7 +190,6 @@ export class ArticlesService {
 
     // Invalidate cache
     await this.invalidateArticleCache(id);
-    await this.invalidateArticlesCache();
 
     this.logger.log(`Article ${id} updated successfully by user ${userId}`);
     return updatedArticle;
@@ -215,7 +211,6 @@ export class ArticlesService {
 
     // Invalidate cache
     await this.invalidateArticleCache(id);
-    await this.invalidateArticlesCache();
 
     this.logger.log(`Article ${id} deleted successfully by user ${userId}`);
   }
@@ -223,10 +218,5 @@ export class ArticlesService {
   private async invalidateArticleCache(id: string): Promise<void> {
     const cacheKey = `article:${id}`;
     await this.cacheManager.del(cacheKey);
-  }
-
-  private async invalidateArticlesCache(): Promise<void> {
-    // Cache will expire naturally after TTL (5 minutes)
-    // For production, consider using Redis SCAN or cache tagging
   }
 }
